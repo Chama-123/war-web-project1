@@ -49,18 +49,20 @@ stage('SonarQube Analysis') {
             }
         }
 
-        stage('Deploy to Tomcat') {
-            steps {
-                script {
-                    def warFile = sh(script: 'find target -name "*.war" -print -quit', returnStdout: true).trim()
-                    sh """
-                        scp -i ${SSH_KEY_PATH} -o StrictHostKeyChecking=no ${warFile} ${TOMCAT_USER}@${TOMCAT_SERVER}:/tmp/
-                        ssh -i ${SSH_KEY_PATH} -o StrictHostKeyChecking=no ${TOMCAT_USER}@${TOMCAT_SERVER} '
-                            sudo mv /tmp/*.war /opt/tomcat/webapps/ && sudo systemctl restart tomcat'
-                    """
-                }
-            }
+       stage('Deploy to Tomcat') {
+    steps {
+        script {
+            sh """
+            scp target/*.war ubuntu@35.154.122.179:/tmp/
+
+            ssh ubuntu@35.154.122.179 '
+            sudo mv /tmp/*.war /opt/tomcat/webapps/wwp.war
+            sudo systemctl restart tomcat
+            '
+            """
         }
+    }
+}
 
         stage('Display URLs') {
             steps {
