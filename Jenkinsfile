@@ -49,25 +49,6 @@ stage('SonarQube Analysis') {
             }
         }
 
-        stage('Publish to Nexus') {
-            steps {
-                script {
-                    def warFile = sh(script: 'find target -name "*.war" -print -quit', returnStdout: true).trim()
-                    nexusArtifactUploader(
-                        nexusVersion: "nexus3",
-                        protocol: "http",
-                        nexusUrl: "${NEXUS_URL}",
-                        groupId: "koddas.web.war",
-                        artifactId: "wwp",
-                        version: "${ART_VERSION}",
-                        repository: "${NEXUS_REPOSITORY}",
-                        credentialsId: "${NEXUS_CREDENTIAL_ID}",
-                        artifacts: [[artifactId: "wwp", file: warFile, type: "war"]]
-                    )
-                }
-            }
-        }
-
         stage('Deploy to Tomcat') {
             steps {
                 script {
