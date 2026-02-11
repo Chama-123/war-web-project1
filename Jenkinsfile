@@ -24,20 +24,23 @@ pipeline {
             }
         }
 stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv('SonarQube Server') {
-                    withCredentials([string(credentialsId: env.SONAR_CREDENTIAL_ID, variable: 'SONAR_TOKEN')]) {
-                        sh """
-                            mvn sonar:sonar \
-                                -Dsonar.projectKey=wwp \
-                                -Dsonar.host.url=${env.SONAR_HOST_URL} \
-                                -Dsonar.login=${SONAR_TOKEN} \
-                                -Dsonar.java.binaries=target/classes
-                        """
-                    }
-                }
+    steps {
+        withSonarQubeEnv('SonarQube Server') {
+            withCredentials([
+                string(credentialsId: 'sonar_token', variable: 'SONAR_TOKEN')
+            ]) {
+                sh """
+                    mvn sonar:sonar \
+                      -Dsonar.projectKey=wwp \
+                      -Dsonar.projectName=wwp \
+                      -Dsonar.host.url=${SONAR_HOST_URL} \
+                      -Dsonar.login=${SONAR_TOKEN}
+                """
             }
+        }
+    }
 }
+
        stage('Extract Version') {
             steps {
                 script {
