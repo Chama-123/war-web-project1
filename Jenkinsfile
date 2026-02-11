@@ -29,13 +29,13 @@ stage('SonarQube Analysis') {
             withCredentials([
                 string(credentialsId: 'sonar_token', variable: 'SONAR_TOKEN')
             ]) {
-                sh """
-                    mvn sonar:sonar \
-                      -Dsonar.projectKey=wwp \
-                      -Dsonar.projectName=wwp \
-                      -Dsonar.host.url=${SONAR_HOST_URL} \
-                      -Dsonar.login=${SONAR_TOKEN}
-                """
+                sh '''
+                  mvn sonar:sonar \
+                  -Dsonar.projectKey=wwp \
+                  -Dsonar.projectName=wwp \
+                  -Dsonar.host.url=http://3.6.116.90:9000 \
+                  -Dsonar.login=$SONAR_TOKEN
+                '''
             }
         }
     }
