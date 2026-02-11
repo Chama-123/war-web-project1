@@ -49,13 +49,13 @@ stage('SonarQube Analysis') {
             }
         }
 
-       stage('Deploy to Tomcat') {
+    stage('Deploy to Tomcat') {
     steps {
         script {
             sh """
-            scp target/*.war ubuntu@35.154.122.179:/tmp/
+            scp -o StrictHostKeyChecking=no target/*.war ubuntu@35.154.122.179:/tmp/
 
-            ssh ubuntu@35.154.122.179 '
+            ssh -o StrictHostKeyChecking=no ubuntu@35.154.122.179 '
             sudo mv /tmp/*.war /opt/tomcat/webapps/wwp.war
             sudo systemctl restart tomcat
             '
